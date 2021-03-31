@@ -5,6 +5,8 @@ from skimage import color
 import torch
 import torch.nn.functional as F
 from IPython import embed
+import matplotlib.pyplot as plt
+import os
 
 def load_img(img_path):
 	out_np = np.asarray(Image.open(img_path))
@@ -45,3 +47,30 @@ def postprocess_tens(tens_orig_l, out_ab, mode='bilinear'):
 
 	out_lab_orig = torch.cat((tens_orig_l, out_ab_orig), dim=1)
 	return color.lab2rgb(out_lab_orig.data.cpu().numpy()[0,...].transpose((1,2,0)))
+
+
+def save_res(l, ab, ab_pred, output_dir):
+	N = l.shape[0]
+	for i in range(N):
+		pred_img = postprocess_tens(l[i][None,...].cpu(), ab_pred[i][None,...].cpu())
+		orig_img = postprocess_tens(l[i][None,...].cpu(), ab[i][None,...].cpu())
+		
+		plt.figure(figsize=(12,4))
+
+		plt.subplot(1,3,1)
+		plt.imshow(l[i][0], cmap='gray')
+		plt.title('gray')
+		plt.axis('off')
+
+		plt.subplot(1,3,2)
+		plt.imshow(orig_img)
+		plt.title('original')
+		plt.axis('off')
+
+		plt.subplot(1,3,3)
+		plt.imshow(pred_img)
+		plt.title('predicted')
+		plt.axis('off')
+
+		plt.savefig(os.path.join(output_dir, f'res_{i}.png'))
+		# plt.show()

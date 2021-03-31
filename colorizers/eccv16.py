@@ -82,7 +82,7 @@ class ECCVGenerator(BaseColor):
 
         self.softmax = nn.Softmax(dim=1)
         self.model_out = nn.Conv2d(313, 2, kernel_size=1, padding=0, dilation=1, stride=1, bias=False)
-        self.upsample4 = nn.Upsample(scale_factor=4, mode='bilinear')
+        self.upsample4 = nn.Upsample(scale_factor=4, mode='bilinear', align_corners=True)
 
     def forward(self, input_l):
         conv1_2 = self.model1(self.normalize_l(input_l))
@@ -97,9 +97,9 @@ class ECCVGenerator(BaseColor):
 
         return self.unnormalize_ab(self.upsample4(out_reg))
 
-def eccv16(pretrained=True):
+def eccv16(pretrained=True, model_path=None):
 	model = ECCVGenerator()
 	if(pretrained):
 		import torch.utils.model_zoo as model_zoo
-		model.load_state_dict(model_zoo.load_url('https://colorizers.s3.us-east-2.amazonaws.com/colorization_release_v2-9b330a0b.pth',map_location='cpu',check_hash=True))
+		model.load_state_dict(torch.load(model_path))
 	return model
