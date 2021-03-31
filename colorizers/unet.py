@@ -53,14 +53,14 @@ class tinyUnet(nn.Module):
     def forward(self, x):
         x = self.unit1(x)
         u1 = x
-        x = self.dsample(x)
+        x = self.dsample(x) # 32
         x = self.unit2(x)
         u2 = x
-        x = self.dsample(x)
-        x = self.usample(self.unitM(x))
-        x = torch.cat([x, u1],1)
-        x = self.usample(self.unit3(x))
+        x = self.dsample(x) # 16
+        x = self.usample(self.unitM(x)) # 32
         x = torch.cat([x, u2],1)
+        x = self.usample(self.unit3(x)) # 64
+        x = torch.cat([x, u1],1)
         x = self.unit4(x)
         return x
 
