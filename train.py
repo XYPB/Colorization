@@ -22,6 +22,10 @@ parser.add_argument('--exp_name', type=str, default='tmp')
 
 if __name__ == '__main__':
 	opt = parser.parse_args()
+	target_dir = os.path.join(opt.output_dir, opt.exp_name)
+	if not os.path.exists(target_dir):
+		os.makedirs(target_dir)
+
 	transformer = transforms.Compose([
         transforms.Resize([opt.img_size, opt.img_size]),
         transforms.RandomHorizontalFlip(),
@@ -69,7 +73,7 @@ if __name__ == '__main__':
 			ab_pred = model(l.to(device))
 			total_loss += criteria(ab_pred, ab.to(device)).item()
 			if i == 0:
-				save_res(l, ab, ab_pred, os.path.join(opt.output_dir, opt.exp_name))
+				save_res(l, ab, ab_pred, target_dir)
 		print(f'Test loss: {total_loss / total_cnt}')
 
 
