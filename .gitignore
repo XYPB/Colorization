@@ -1,4 +1,8 @@
 *.npz
 *.pyc
-data/
+dataset/
 *.jpg
+model/
+*/__pycache__/
+.vscode/*
+*/*.pyc
