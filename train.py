@@ -25,7 +25,15 @@ if __name__ == '__main__':
 
 	model = eccv16(model_path=opt.param_path).to(device)
 	criteria = nn.MSELoss()
-	optimizer = torch.optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-4)
+	optimizer = torch.optim.Adam([{'params':model.model1.parameters()},
+									{'params':model.model2.parameters()},
+									{'params':model.model3.parameters()},
+									{'params':model.model4.parameters()},
+									{'params':model.model5.parameters()},
+									{'params':model.model6.parameters()},
+									{'params':model.model7.parameters()},
+									{'params':model.model8.parameters()},
+									], lr=1e-4, weight_decay=1e-4)
 
 	for epoch in range(opt.num_epoch):
 		model.train()
