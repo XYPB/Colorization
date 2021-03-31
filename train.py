@@ -20,7 +20,7 @@ parser.add_argument('--img_size', type=int, default=64)
 if __name__ == '__main__':
 	opt = parser.parse_args()
 	transformer = transforms.Compose([
-        transforms.Resize(opt.img_size),
+        transforms.Resize([opt.img_size, opt.img_size]),
         transforms.RandomHorizontalFlip(),
     ])
 
