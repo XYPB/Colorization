@@ -62,7 +62,7 @@ if __name__ == '__main__':
 		total_cnt = len(te_loader)
 		for i, (l, ab) in enumerate(pbar_test):
 			ab_pred = model(l.to(device))
-			total_loss += criteria(ab_pred, ab.to(device)).item
+			total_loss += criteria(ab_pred, ab.to(device)).item()
 			if i == 0:
 				save_res(l, ab, ab_pred, opt.output_dir)
 		print(f'Test loss: {total_loss / total_cnt}')
