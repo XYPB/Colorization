@@ -16,7 +16,7 @@ parser.add_argument('-p','--data_path', type=str, default='./dataset/COCO/')
 parser.add_argument('--param_path', type=str, default='model/colorization_release_v2-9b330a0b.pth')
 parser.add_argument('--batch_size', type=int, default=64)
 parser.add_argument('--output_dir', type=str, default='imgs_out/')
-parser.add_argument('--num_epoch', type=int, default=10)
+parser.add_argument('--num_epoch', type=int, default=40)
 parser.add_argument('--img_size', type=int, default=64)
 parser.add_argument('--exp_name', type=str, default='tmp')
 
@@ -27,7 +27,8 @@ if __name__ == '__main__':
 		os.makedirs(target_dir)
 
 	transformer = transforms.Compose([
-        transforms.Resize([opt.img_size, opt.img_size]),
+        transforms.Resize(opt.img_size),
+		transforms.CenterCrop(opt.img_size),
         transforms.RandomHorizontalFlip(),
     ])
 
