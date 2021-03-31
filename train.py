@@ -3,6 +3,7 @@ import argparse
 import matplotlib.pyplot as plt
 import torch
 import torchvision.transforms as transforms
+from torchsummary import summary
 
 from colorizers import *
 from data import tinycoco_dataset
@@ -16,6 +17,7 @@ parser.add_argument('--batch_size', type=int, default=64)
 parser.add_argument('--output_dir', type=str, default='imgs_out/')
 parser.add_argument('--num_epoch', type=int, default=10)
 parser.add_argument('--img_size', type=int, default=64)
+parser.add_argument('--exp_name', type=str, default='tmp')
 
 if __name__ == '__main__':
 	opt = parser.parse_args()
@@ -29,7 +31,8 @@ if __name__ == '__main__':
 	te_loader = tinycoco_dataset.get_TinyCOCO_loader(root=opt.data_path, batch_size=opt.batch_size, task='test', transfomer=transformer)
 	va_loader = tinycoco_dataset.get_TinyCOCO_loader(root=opt.data_path, batch_size=opt.batch_size, task='val', transfomer=transformer)
 
-	model = eccv16(model_path=opt.param_path).to(device)
+	# model = eccv16(model_path=opt.param_path).to(device)
+	model = unet().to(device)
 	criteria = nn.MSELoss()
 	optimizer = torch.optim.Adam([{'params':model.model1.parameters()},
 									{'params':model.model2.parameters()},
@@ -41,6 +44,7 @@ if __name__ == '__main__':
 									{'params':model.model8.parameters()},
 									], lr=1e-4, weight_decay=1e-4)
 
+	summary(model, (1, opt.img_size, opt.img_size))
 	for epoch in range(opt.num_epoch):
 		model.train()
 		pbar = tqdm(tr_loader)
@@ -63,7 +67,7 @@ if __name__ == '__main__':
 			ab_pred = model(l.to(device))
 			total_loss += criteria(ab_pred, ab.to(device)).item()
 			if i == 0:
-				save_res(l, ab, ab_pred, opt.output_dir)
+				save_res(l, ab, ab_pred, os.path.join(opt.output_dir, opt.exp_name))
 		print(f'Test loss: {total_loss / total_cnt}')
 
 
