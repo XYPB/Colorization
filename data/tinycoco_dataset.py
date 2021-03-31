@@ -7,8 +7,9 @@ import torch.nn.functional as F
 from skimage import color
 import os
 
-_transformer = transforms.Compose([
-        transforms.Resize([128,128]),
+transformer = transforms.Compose([
+        transforms.Resize(128),
+		transforms.CenterCrop(128),
         transforms.RandomHorizontalFlip(),
     ])
 
