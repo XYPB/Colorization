@@ -6,7 +6,7 @@ from IPython import embed
 
 class tinyUnet(nn.Module):
     def __init__(self):
-        super(Net, self).__init__()
+        super(tinyUnet, self).__init__()
         self.unit1 = nn.Sequential(
             nn.Conv2d(1, 64, 3, padding=1),
             nn.ReLU(),
@@ -44,7 +44,7 @@ class tinyUnet(nn.Module):
             nn.Conv2d(64, 64, 3, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(),
-            nn.Conv2d(64, 5, 3, padding=1),
+            nn.Conv2d(64, 2, 3, padding=1),
         )
 
     def forward(self, x):

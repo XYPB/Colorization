@@ -6,6 +6,7 @@ import torchvision.transforms as transforms
 from torchsummary import summary
 
 from colorizers import *
+from colorizers.unet import unet
 from data import tinycoco_dataset
 from tqdm import tqdm
 
@@ -31,19 +32,20 @@ if __name__ == '__main__':
 	te_loader = tinycoco_dataset.get_TinyCOCO_loader(root=opt.data_path, batch_size=opt.batch_size, task='test', transfomer=transformer)
 	va_loader = tinycoco_dataset.get_TinyCOCO_loader(root=opt.data_path, batch_size=opt.batch_size, task='val', transfomer=transformer)
 
-	# model = eccv16(model_path=opt.param_path).to(device)
 	model = unet().to(device)
-	criteria = nn.MSELoss()
-	optimizer = torch.optim.Adam([{'params':model.model1.parameters()},
-									{'params':model.model2.parameters()},
-									{'params':model.model3.parameters()},
-									{'params':model.model4.parameters()},
-									{'params':model.model5.parameters()},
-									{'params':model.model6.parameters()},
-									{'params':model.model7.parameters()},
-									{'params':model.model8.parameters()},
-									], lr=1e-4, weight_decay=1e-4)
+	optimizer = torch.optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-4)
+	# model = eccv16(model_path=opt.param_path).to(device)
+	# optimizer = torch.optim.Adam([{'params':model.model1.parameters()},
+	# 								{'params':model.model2.parameters()},
+	# 								{'params':model.model3.parameters()},
+	# 								{'params':model.model4.parameters()},
+	# 								{'params':model.model5.parameters()},
+	# 								{'params':model.model6.parameters()},
+	# 								{'params':model.model7.parameters()},
+	# 								{'params':model.model8.parameters()},
+	# 								], lr=1e-4, weight_decay=1e-4)
 
+	criteria = nn.MSELoss()
 	summary(model, (1, opt.img_size, opt.img_size))
 	for epoch in range(opt.num_epoch):
 		model.train()
