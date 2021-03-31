@@ -6,3 +6,4 @@ model/
 */__pycache__/
 .vscode/*
 */*.pyc
+imgs_out/

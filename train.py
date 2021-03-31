@@ -12,7 +12,7 @@ from tqdm import tqdm
 parser = argparse.ArgumentParser()
 parser.add_argument('-p','--data_path', type=str, default='./dataset/COCO/')
 parser.add_argument('--param_path', type=str, default='model/colorization_release_v2-9b330a0b.pth')
-parser.add_argument('--batch_size', type=int, default=32)
+parser.add_argument('--batch_size', type=int, default=64)
 parser.add_argument('--output_dir', type=str, default='imgs_out/')
 parser.add_argument('--num_epoch', type=int, default=10)
 parser.add_argument('--img_size', type=int, default=64)
@@ -46,7 +46,6 @@ if __name__ == '__main__':
 		pbar = tqdm(tr_loader)
 		total_loss = 0
 		for i, (l, ab) in enumerate(pbar):
-			ab.to(device)
 			ab_pred = model(l.to(device))
 			optimizer.zero_grad()
 			loss = criteria(ab_pred.cuda(), ab.cuda())

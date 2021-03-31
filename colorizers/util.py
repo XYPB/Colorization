@@ -73,4 +73,5 @@ def save_res(l, ab, ab_pred, output_dir):
 		plt.axis('off')
 
 		plt.savefig(os.path.join(output_dir, f'res_{i}.png'))
+		plt.close()
 		# plt.show()
