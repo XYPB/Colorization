@@ -2,6 +2,7 @@
 import argparse
 import matplotlib.pyplot as plt
 import torch
+import torchvision.transforms as transforms
 
 from colorizers import *
 from data import tinycoco_dataset
