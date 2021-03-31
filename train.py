@@ -24,9 +24,9 @@ if __name__ == '__main__':
     ])
 
 	device = 'cuda' if torch.cuda.is_available() else 'cpu'
-	tr_loader = tinycoco_dataset.get_TinyCOCO_loader(root=opt.data_path, batch_size=opt.batch_size, task='train')
-	te_loader = tinycoco_dataset.get_TinyCOCO_loader(root=opt.data_path, batch_size=opt.batch_size, task='test')
-	va_loader = tinycoco_dataset.get_TinyCOCO_loader(root=opt.data_path, batch_size=opt.batch_size, task='val')
+	tr_loader = tinycoco_dataset.get_TinyCOCO_loader(root=opt.data_path, batch_size=opt.batch_size, task='train', transfomer=transformer)
+	te_loader = tinycoco_dataset.get_TinyCOCO_loader(root=opt.data_path, batch_size=opt.batch_size, task='test', transfomer=transformer)
+	va_loader = tinycoco_dataset.get_TinyCOCO_loader(root=opt.data_path, batch_size=opt.batch_size, task='val', transfomer=transformer)
 
 	model = eccv16(model_path=opt.param_path).to(device)
 	criteria = nn.MSELoss()
