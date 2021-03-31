@@ -36,7 +36,7 @@ class tinyUnet(nn.Module):
         )
         self.usample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=False)
         self.unit3 = nn.Sequential(
-            nn.Conv2d(128, 64, 3, padding=1),
+            nn.Conv2d(256, 64, 3, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(),
             nn.Conv2d(64, 64, 3, padding=1),
@@ -44,7 +44,7 @@ class tinyUnet(nn.Module):
             nn.ReLU(),
         )
         self.unit4 = nn.Sequential(
-            nn.Conv2d(64, 64, 3, padding=1),
+            nn.Conv2d(128, 64, 3, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(),
             nn.Conv2d(64, 2, 3, padding=1),
@@ -58,9 +58,9 @@ class tinyUnet(nn.Module):
         u2 = x
         x = self.dsample(x)
         x = self.usample(self.unitM(x))
-        x = x + u2
+        x = torch.cat([x, u1],1)
         x = self.usample(self.unit3(x))
-        x = x + u1
+        x = torch.cat([x, u2],1)
         x = self.unit4(x)
         return x
 
