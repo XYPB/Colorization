@@ -1,4 +1,3 @@
-
 import argparse
 import matplotlib.pyplot as plt
 import torch
@@ -14,10 +13,10 @@ from tqdm import tqdm
 parser = argparse.ArgumentParser()
 parser.add_argument('-p','--data_path', type=str, default='./dataset/COCO/')
 parser.add_argument('--param_path', type=str, default='model/colorization_release_v2-9b330a0b.pth')
-parser.add_argument('--batch_size', type=int, default=64)
+parser.add_argument('--batch_size', type=int, default=4)
 parser.add_argument('--output_dir', type=str, default='imgs_out/')
-parser.add_argument('--num_epoch', type=int, default=40)
-parser.add_argument('--img_size', type=int, default=64)
+parser.add_argument('--num_epoch', type=int, default=20)
+parser.add_argument('--img_size', type=int, default=256)
 parser.add_argument('--exp_name', type=str, default='tmp')
 
 if __name__ == '__main__':
@@ -37,18 +36,18 @@ if __name__ == '__main__':
 	te_loader = tinycoco_dataset.get_TinyCOCO_loader(root=opt.data_path, batch_size=opt.batch_size, task='test', transfomer=transformer)
 	va_loader = tinycoco_dataset.get_TinyCOCO_loader(root=opt.data_path, batch_size=opt.batch_size, task='val', transfomer=transformer)
 
-	model = unet().to(device)
-	optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, weight_decay=1e-4)
-	# model = eccv16(model_path=opt.param_path).to(device)
-	# optimizer = torch.optim.Adam([{'params':model.model1.parameters()},
-	# 								{'params':model.model2.parameters()},
-	# 								{'params':model.model3.parameters()},
-	# 								{'params':model.model4.parameters()},
-	# 								{'params':model.model5.parameters()},
-	# 								{'params':model.model6.parameters()},
-	# 								{'params':model.model7.parameters()},
-	# 								{'params':model.model8.parameters()},
-	# 								], lr=1e-4, weight_decay=1e-4)
+	# model = unet().to(device)
+	# optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, weight_decay=1e-4)
+	model = eccv16(model_path=opt.param_path).to(device)
+	optimizer = torch.optim.SGD([{'params':model.model1.parameters()},
+									{'params':model.model2.parameters()},
+									{'params':model.model3.parameters()},
+									{'params':model.model4.parameters()},
+									{'params':model.model5.parameters()},
+									{'params':model.model6.parameters()},
+									{'params':model.model7.parameters()},
+									{'params':model.model8.parameters()},
+									], lr=1e-4, weight_decay=1e-4)
 
 	criteria = nn.MSELoss()
 	summary(model, (1, opt.img_size, opt.img_size))
