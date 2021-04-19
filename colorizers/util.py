@@ -7,6 +7,8 @@ import torch.nn.functional as F
 from IPython import embed
 import matplotlib.pyplot as plt
 import os
+from torchvision import transforms
+
 
 def load_img(img_path):
 	out_np = np.asarray(Image.open(img_path))
@@ -37,6 +39,12 @@ def postprocess_tens(tens_orig_l, out_ab, mode='bilinear'):
 	# out_ab 		1 x 2 x H x W
 
 	HW_orig = tens_orig_l.shape[2:]
+	H, W = HW_orig
+	scale = float(256)/(min(H, W))
+	H_tar, W_tar = int(H * scale / 8) * 8, int(W * scale / 8) * 8
+	trans = transforms.Compose([transforms.Resize((H_tar, W_tar)),])
+	tens_orig_l = trans(tens_orig_l)
+	HW_orig = (H_tar, W_tar)
 	HW = out_ab.shape[2:]
 
 	# call resize function if needed
