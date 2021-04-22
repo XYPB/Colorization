@@ -27,7 +27,10 @@ if(opt.use_gpu):
 
 # default size to process images is 256x256
 # grab L channel in both original ("orig") and resized ("rs") resolutions
-for img_name in tqdm(os.listdir(opt.img_path)):
+total_psnr_eccv16 = 0
+total_psnr_siggraph17 = 0
+pbar = tqdm(os.listdir(opt.img_path))
+for i, img_name in enumerate(pbar, 1):
     img = load_img(os.path.join(opt.img_path, img_name))
 
     (tens_l_orig, tens_l_rs) = preprocess_img(img, HW=(256, 256))
@@ -42,8 +45,11 @@ for img_name in tqdm(os.listdir(opt.img_path)):
         tens_l_orig, colorizer_eccv16(tens_l_rs).cpu())
     out_img_siggraph17 = postprocess_tens(
         tens_l_orig, colorizer_siggraph17(tens_l_rs).cpu())
-    plt.imsave(os.path.join('eccv16/', img_name), out_img_eccv16)
-    plt.imsave(os.path.join('siggraph/', img_name), out_img_siggraph17)
+    total_psnr_eccv16 += get_metrics(out_img_eccv16[None, ...], img_bw[None, ...])
+    total_psnr_siggraph17 += get_metrics(out_img_siggraph17[None, ...], img_bw[None, ...])
+    pbar.set_description(f'ECCV16: PSNR: {total_psnr_eccv16/i:.4f}, SIGGRAPH17 PSNR: {total_psnr_siggraph17/i:.4f}')
+    # plt.imsave(os.path.join('eccv16/', img_name), out_img_eccv16)
+    # plt.imsave(os.path.join('siggraph/', img_name), out_img_siggraph17)
 
     # plt.imsave('%s_eccv16.png'%opt.save_prefix, out_img_eccv16)
     # plt.imsave('%s_siggraph17.png'%opt.save_prefix, out_img_siggraph17)
